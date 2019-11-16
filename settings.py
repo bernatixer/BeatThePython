@@ -18,5 +18,5 @@ score = 0
 missed = 0
 reward = 0
 
-LR = 0.01
-Y = 0.99
+LR = 0.2
+Y = 0.8

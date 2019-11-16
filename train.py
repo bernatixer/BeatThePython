@@ -28,6 +28,7 @@ def convert(s):
     return storage[n]
 
 def action(s):
+    print("Actions: ", Q[convert(s), :])
     return np.argmax(Q[convert(s), :])
 
 def afteraction(s, action):
@@ -50,6 +51,9 @@ def chooseAction(player,food):
     SCORE += r0
     print("Score: ", SCORE)
     s1 = afteraction(s, act)
-    Q[convert(s), act] += LR*(r0 + Y * np.max(Q[convert(s1), :]) - Q[convert(s), act])
+    print("=======")
+    print(Q[convert(s), act], "-", r0, "-", np.max(Q[convert(s1), :]))
+    print("=======")
+    Q[convert(s), act] = Q[convert(s), act] + LR*(r0 + Y * np.max(Q[convert(s1), :]) - Q[convert(s), act])
     
     return act
