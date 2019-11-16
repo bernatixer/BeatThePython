@@ -13,8 +13,12 @@ train_ = False
 if not train_:
     with open('stats.json', 'r') as fp:
         stats = json.load(fp)
-        generation = stats["generation"]
-        max_score = stats["max_score"]
+        if "generation" in stats and "max_score" in stats:
+            generation = stats["generation"]
+            max_score = stats["max_score"]
+        else:
+            generation = 0
+            max_score = 0
 else:
     generation = 0
     max_score = 0
