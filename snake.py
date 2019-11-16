@@ -89,24 +89,25 @@ class Snake:
         distA = self.calculateDistance(self.POSITIONS[-1], FOOD[0], action = action)
         distB = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
 
+        print("Distancia: ", distA, " Distancia: ",distB)
         if distA < distB:
             return 1
         else:
             return -1
 
     def calculateDistance(self, head, food, action = None):
-        if not action:
-            (a,b) = head
-        else:
+        if action or action == 0:
             if action == 2:
-                (a,b) = (self.POSITIONS[-1][0] - 1, self.POSITIONS[-1][1])
+                (a,b) = (head[0] - 1, head[1])
             if action == 3:
-                (a,b) = (self.POSITIONS[-1][0] + 1, self.POSITIONS[-1][1])
+                (a,b) = (head[0] + 1, head[1])
             if action == 0:
-                (a,b) = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] - 1)
+                (a,b) = (head[0], head[1] - 1)
             if action == 1:
-                (a,b) = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] + 1)
+                (a,b) = (head[0], head[1] + 1)
+        else:
+            (a,b) = head
 
         (c,d) = food
-        return math.sqrt((a-c)^2 + (b-d)^2)
+        return math.sqrt((a-c)**2 + (b-d)**2)
             
