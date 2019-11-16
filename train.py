@@ -5,8 +5,6 @@ import game
 storage = {}
 Q = np.zeros([25000, 4])
 
-SCORE = 0
-
 class State:
     def __init__(self,head,food):
         self.head = head
@@ -44,12 +42,18 @@ def afteraction(s, action):
     return State(newHead, s.food)
 
 def chooseAction(player,food):
+    global LR
+    global reward
+    global missed
     s = State(player.POSITIONS[-1],food)
     act = action(s)
     r0 = player.calculateScore(food, act)
-    global SCORE
-    SCORE += r0
-    print("Score: ", SCORE)
+
+
+    if r0 > 0:
+        reward += r0
+    else:
+        missed += r0 
     s1 = afteraction(s, act)
     print("=======")
     print(Q[convert(s), act], "-", r0, "-", np.max(Q[convert(s1), :]))

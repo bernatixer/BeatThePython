@@ -6,9 +6,6 @@ import random
 import sys
 import train
 
-FPS = 150
-fpsClock = pg.time.Clock()
-
 class Game:
     def __init__(self):
         pg.init()
@@ -48,7 +45,6 @@ class Game:
             self.DISPLAY.blit(score, (10, 5))  # render score
 
             pg.display.update()
-            fpsClock.tick(FPS)
 
     def drawFood(self, x,y):
         pg.draw.rect(self.DISPLAY,COLORS['red'],(x,y,TILE_SIZE,TILE_SIZE))
@@ -69,4 +65,5 @@ class Game:
 
 
 if __name__== "__main__":
-    game = Game()
+    global GAME
+    GAME = Game()
