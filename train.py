@@ -3,7 +3,7 @@ import numpy as np
 import game
 
 storage = {}
-Q = np.zeros([25000, 4])
+Q = np.zeros([50000, 4])
 
 class State:
     def __init__(self,head,food):

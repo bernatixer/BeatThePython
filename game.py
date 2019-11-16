@@ -15,6 +15,7 @@ class Game:
 
         pg.time.set_timer(USEREVENT + 1, 1) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
+        pg.time.set_timer(USEREVENT + 3, 100000) # Save weigths
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
         self.createFood()
