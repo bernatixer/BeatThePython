@@ -4,6 +4,7 @@ from settings import *
 from snake import Snake
 import random
 import sys
+import train
 
 FPS = 150
 fpsClock = pg.time.Clock()
@@ -24,12 +25,14 @@ class Game:
         while True:
             self.DISPLAY.fill(COLORS['black'])
             for event in pg.event.get():
-                if event.type==QUIT:
+                if event.type == QUIT:
                     pg.quit()
                     sys.exit()
                 if event.type == pg.KEYDOWN:
                     self.Player1.newEvent(event)
                 if event.type == USEREVENT + 1:
+                    # action = train.chooseAction(self.Player1, self.FOOD)
+                    # self.Player1.act(action)
                     self.Player1.moveSnake()
                 if event.type == USEREVENT + 2:
                     self.createFood()
@@ -49,7 +52,8 @@ class Game:
         pg.draw.rect(self.DISPLAY,COLORS['red'],(x,y,TILE_SIZE,TILE_SIZE))
 
     def createFood(self):
-        self.FOOD.append((random.randint(1,WIDTH//TILE_SIZE),random.randint(1,HEIGHT//TILE_SIZE)))
+        if len(self.FOOD) == 0:
+            self.FOOD.append((random.randint(1,WIDTH//TILE_SIZE),random.randint(1,HEIGHT//TILE_SIZE)))
 
     def getScore(self):
         return self.Player1.SCORE

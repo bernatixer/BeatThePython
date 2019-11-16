@@ -23,6 +23,28 @@ class Snake:
     def drawSnake(self,x,y):
         pg.draw.rect(self.DISPLAY,self.color,(x,y,TILE_SIZE,TILE_SIZE))
 
+    def act(self, action):
+        if action == 0:
+            self.moveUp()
+        elif action == 1:
+            self.moveDown()
+        elif action == 2:
+            self.moveLeft()
+        elif action == 3:
+            self.moveRight()
+
+    def moveLeft(self):
+        self.CURR_PresedKey = self.left
+
+    def moveRight(self):
+        self.CURR_PresedKey = self.right
+
+    def moveUp(self):
+        self.CURR_PresedKey = self.up
+
+    def moveDown(self):
+        self.CURR_PresedKey = self.down
+
     def moveSnake(self):
         newPos = None
         if self.CURR_PresedKey == self.left:
@@ -60,3 +82,33 @@ class Snake:
             
             if not a and not b and not c and not d:
                 self.CURR_PresedKey = event.key
+    
+    def calculateScore(self, FOOD):
+        if self.getSnakeDirection() == self.getFoodDirection(FOOD):
+            return 1
+        else:
+            return -1
+
+    def getSnakeDirection(self):
+        (a,b) = self.POSITIONS[-1]
+        (c,d) = self.POSITIONS[-2]
+        if d == b+1:
+            return 1
+        elif d == b-1:
+            return 0
+        elif a == c-1:
+            return 3 
+        else:
+            return 2
+
+    def getFoodDirection(self, FOOD):
+        (a,b) = self.POSITIONS[-1]
+        (c,d) = FOOD[0]
+        if d == b+1:
+            return 1
+        elif d == b-1:
+            return 0
+        elif a == c-1:
+            return 3 
+        else:
+            return 2

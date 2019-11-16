@@ -13,7 +13,6 @@ COLORS = {
 
 # TRAIN
 storage = {}
-action = 2
 cenX = 10
 cenY = 50
 radius = 10
