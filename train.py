@@ -8,12 +8,12 @@ Q = np.zeros([25000, 4])
 SCORE = 0
 
 class State:
-    def __init__(self,direction,fooddirection):
-        self.direction = direction
-        self.fooddirection = fooddirection
+    def __init__(self,head,food):
+        self.head = head
+        self.food = food
 
     def getStringState(self):
-        return str(self.direction)+str(self.fooddirection)
+        return str(self.head)+str(self.food)
 
 def convert(s):
     n = s.getStringState()
@@ -36,7 +36,7 @@ def afteraction(s, action):
 def chooseAction(player,food):
     direction = player.getSnakeDirection()
     fooddirection = player.getFoodDirection(food)
-    s = State(direction,fooddirection)
+    s = State(player.POSITIONS[-1],food)
     act = action(s)
     r0 = player.calculateScore(food, act)
     global SCORE
