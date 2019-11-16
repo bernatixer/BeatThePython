@@ -10,14 +10,13 @@ FPS = 150
 fpsClock = pg.time.Clock()
 
 class Game:
-    def __init__(self, game_over):
+    def __init__(self):
         pg.init()
-        self.game_over = game_over
         self.FOOD = []
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
-        pg.time.set_timer(USEREVENT + 1, 1000) # move snake
+        pg.time.set_timer(USEREVENT + 1, 10) # move snake
         pg.time.set_timer(USEREVENT + 2, 1500) # Create Food
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
@@ -39,6 +38,8 @@ class Game:
                     self.createFood()
 
             self.Player1.update(self.FOOD)
+            if not self.FOOD:
+                self.createFood()
 
             for pos in self.FOOD:
                 self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
@@ -54,15 +55,14 @@ class Game:
 
     def createFood(self):
         if len(self.FOOD) == 0:
-            self.FOOD.append((random.randint(1,WIDTH//TILE_SIZE),random.randint(1,HEIGHT//TILE_SIZE)))
+            self.FOOD.append((random.randint(1,(WIDTH//TILE_SIZE) -1),random.randint(1,(HEIGHT//TILE_SIZE) -1)))
 
     def getScore(self):
         return self.Player1.SCORE
 
+    def game_over(self):
+        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
 
-def gameOver():
-    print("HAS PERDUT")
-    exit()
 
 if __name__== "__main__":
-    game = Game(gameOver)
+    game = Game()

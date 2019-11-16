@@ -59,10 +59,10 @@ class Snake:
             newPos = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] + 1)
 
         if newPos:
-            # if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE or newPos in self.POSITIONS:
-            #     print("Final Score:", self.SCORE)
-            #     self.gameOver = True
-            #     self.GAME_OVER()
+            if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE or newPos in self.POSITIONS:
+                print("Final Score:", self.SCORE)
+                self.gameOver = True
+                self.GAME_OVER()
             if len(self.POSITIONS) > self.SCORE + 5:
                 del self.POSITIONS[0]            
             self.POSITIONS.append(newPos)
@@ -90,8 +90,13 @@ class Snake:
         distB = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
 
         print("Distancia: ", distA, " Distancia: ",distB)
-        if distA < distB:
-            return 1
+        if distA == "over":
+            return -10
+        if distA == "eat":
+            return 5
+
+        if abs(distA) < abs(distB):
+            return 2
         else:
             return -1
 
@@ -105,6 +110,11 @@ class Snake:
                 (a,b) = (head[0], head[1] - 1)
             if action == 1:
                 (a,b) = (head[0], head[1] + 1)
+
+            if (a,b)[0] < 0 or (a,b)[1] < 0 or (a,b)[0] >= WIDTH // TILE_SIZE or (a,b)[1] >= HEIGHT // TILE_SIZE:
+                return "over"
+            if (a,b) == food:
+                return "eat"
         else:
             (a,b) = head
 
