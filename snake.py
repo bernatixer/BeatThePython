@@ -65,9 +65,14 @@ class Snake:
                 del self.POSITIONS[0]            
             self.POSITIONS.append(newPos)
 
-    def update(self, FOOD):
+    def update(self, FOOD, DISPLAY, swiss, swissrect):
         for pos in self.POSITIONS:
-            self.drawSnake(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
+            #self.drawSnake(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
+
+            swissrect.x = pos[0] * TILE_SIZE
+            swissrect.y = pos[1] * TILE_SIZE
+            self.DISPLAY.blit(swiss, swissrect)
+
         if self.POSITIONS[-1] in FOOD:
             del FOOD[FOOD.index(self.POSITIONS[-1])]
             self.SCORE += 1

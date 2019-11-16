@@ -14,6 +14,12 @@ max_score = 0
 
 class Game:
     def __init__(self):
+
+        self.money = pg.image.load("images/money.png")
+        self.swiss = pg.image.load("images/swiss.png")
+        self.moneyrect = self.money.get_rect()
+        self.swissrect = self.swiss.get_rect()
+
         pg.init()
         self.FOOD = []
         self.DISPLAY = pg.display.set_mode(SIZE)
@@ -46,12 +52,15 @@ class Game:
                             json.dump(train.storage, fp)
                         np.savetxt("Q.txt", train.Q)
 
-            self.Player1.update(self.FOOD)
+            self.Player1.update(self.FOOD, self.DISPLAY, self.swiss, self.swissrect)
             if not self.FOOD:
                 self.createFood()
 
             for pos in self.FOOD:
-                self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
+                self.moneyrect.x = pos[0] * TILE_SIZE
+                self.moneyrect.y = pos[1] * TILE_SIZE
+                self.DISPLAY.blit(self.money, self.moneyrect)
+                #self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
             if not train.train:
                 score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
@@ -64,6 +73,7 @@ class Game:
                 epoch = self.FONT.render('Generation: ' + str(generation), True, COLORS["text"])
                 self.DISPLAY.blit(epoch, (10, 55))
 
+            
             pg.display.update()
 
     def drawFood(self, x,y):
