@@ -1,21 +1,16 @@
-import sys, pygame
+import sys
+import pygame as pg
 from pygame.locals import *
 import time
 import random
+from settings import *
 
-TILE_SIZE = 32
-pygame.init()
+pg.init()
 
-SIZE = WIDTH, HEIGHT = 768, 768
-
-COLORS = {
-    "black": (0,0,0),
-    "white": (255,255,255),
-    "red": (255,0,0),
-}
 
 FOOD = []
-DISPLAY = pygame.display.set_mode(SIZE)
+DISPLAY = pg.display.set_mode(SIZE)
+font = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
 class Snake:
     def __init__(self, up, down, right, left, color):
@@ -30,7 +25,7 @@ class Snake:
         self.SCORE = 0
     
     def drawSnake(self,x,y):
-        pygame.draw.rect(DISPLAY,self.color,(x,y,TILE_SIZE,TILE_SIZE))
+        pg.draw.rect(DISPLAY,self.color,(x,y,TILE_SIZE,TILE_SIZE))
 
     def moveSnake(self):
         newPos = None
@@ -69,23 +64,23 @@ class Snake:
             self.CURR_PresedKey = event.key
 
 def drawFood(x,y):
-    pygame.draw.rect(DISPLAY,COLORS['red'],(x,y,TILE_SIZE,TILE_SIZE))
+    pg.draw.rect(DISPLAY,COLORS['red'],(x,y,TILE_SIZE,TILE_SIZE))
 
 def createFood():
     FOOD.append((random.randint(1,WIDTH//TILE_SIZE),random.randint(1,HEIGHT//TILE_SIZE)))
 
-pygame.time.set_timer(USEREVENT + 1, 150) # move snake
-pygame.time.set_timer(USEREVENT + 2, 1500) # Create Food
+pg.time.set_timer(USEREVENT + 1, 150) # move snake
+pg.time.set_timer(USEREVENT + 2, 1500) # Create Food
 
-Player1 = Snake(color = COLORS["white"], up = pygame.K_UP, down = pygame.K_DOWN, right = pygame.K_RIGHT, left = K_LEFT)
+Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT)
 
 while True:    
     DISPLAY.fill(COLORS['black'])
-    for event in pygame.event.get():
+    for event in pg.event.get():
         if event.type==QUIT:
-            pygame.quit()
+            pg.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
+        if event.type == pg.KEYDOWN:
             Player1.newEvent(event)
         if event.type == USEREVENT + 1:
             Player1.moveSnake()
@@ -97,4 +92,7 @@ while True:
     for pos in FOOD:
         drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
-    pygame.display.flip()
+    text = font.render('Score: ' + str(Player1.SCORE), True, COLORS["text"]) 
+    DISPLAY.blit(text, (10, 5))  # render score
+
+    pg.display.flip()
