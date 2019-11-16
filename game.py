@@ -17,10 +17,11 @@ class Game:
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
-        pg.time.set_timer(USEREVENT + 1, 100) # move snake
+        pg.time.set_timer(USEREVENT + 1, 1000) # move snake
         pg.time.set_timer(USEREVENT + 2, 1500) # Create Food
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
+        self.createFood()
 
         while True:
             self.DISPLAY.fill(COLORS['black'])
@@ -31,8 +32,9 @@ class Game:
                 if event.type == pg.KEYDOWN:
                     self.Player1.newEvent(event)
                 if event.type == USEREVENT + 1:
-                    # action = train.chooseAction(self.Player1, self.FOOD)
-                    # self.Player1.act(action)
+                    action = train.chooseAction(self.Player1, self.FOOD)
+                    self.Player1.act(action)
+                    print("Direction: ", self.Player1.getSnakeDirection(), " Food: ", self.Player1.getFoodDirection(self.FOOD))
                     self.Player1.moveSnake()
                 if event.type == USEREVENT + 2:
                     self.createFood()
@@ -42,8 +44,8 @@ class Game:
             for pos in self.FOOD:
                 self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
-            text = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"]) 
-            self.DISPLAY.blit(text, (10, 5))  # render score
+            score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
+            self.DISPLAY.blit(score, (10, 5))  # render score
 
             pg.display.update()
             fpsClock.tick(FPS)
