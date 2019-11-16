@@ -2,8 +2,15 @@ from settings import *
 import numpy as np
 import game
 
+# import json
+# with open('storage.json', 'w') as fp:
+#     json.dump(storage, fp)
+
+# with open('storage.json', 'r') as fp:
+#     data = json.load(fp)
+
 storage = {}
-Q = np.zeros([25000, 4])
+Q = np.zeros([50000, 4])
 
 class State:
     def __init__(self,head,food):
@@ -26,7 +33,6 @@ def convert(s):
     return storage[n]
 
 def action(s):
-    print("Actions: ", Q[convert(s), :])
     return np.argmax(Q[convert(s), :])
 
 def afteraction(s, action):
@@ -49,15 +55,11 @@ def chooseAction(player,food):
     act = action(s)
     r0 = player.calculateScore(food, act)
 
-
     if r0 > 0:
         reward += r0
     else:
         missed += r0 
     s1 = afteraction(s, act)
-    print("=======")
-    print(Q[convert(s), act], "-", r0, "-", np.max(Q[convert(s1), :]))
-    print("=======")
     Q[convert(s), act] = Q[convert(s), act] + LR*(r0 + Y * np.max(Q[convert(s1), :]) - Q[convert(s), act])
     
     return act
