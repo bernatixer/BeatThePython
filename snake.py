@@ -4,6 +4,7 @@ from pygame.locals import *
 import time
 import random
 from settings import *
+import math
 
 class Snake:
     def __init__(self, up, down, right, left, color, display, game_over):
@@ -85,34 +86,15 @@ class Snake:
                 self.CURR_PresedKey = event.key
     
     def calculateScore(self, FOOD, action):
-        (a,b) = self.POSITIONS[-1]
-        (c,d) = FOOD[0]
-        
-        if self.getSnakeDirection() == self.getFoodDirection(FOOD):
+        distA = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
+        distB = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
+
+        if distA < distB:
             return 1
         else:
             return -1
 
-    def getSnakeDirection(self):
-        (a,b) = self.POSITIONS[-1]
-        (c,d) = self.POSITIONS[-2]
-        if d == b+1:
-            return 0
-        elif d == b-1:
-            return 1
-        elif a == c-1:
-            return 2 
-        else:
-            return 3
-
-    def getFoodDirection(self, FOOD):
-        (a,b) = self.POSITIONS[-1]
-        (c,d) = FOOD[0]
-        if d == b+1:
-            return 0
-        elif d == b-1:
-            return 1
-        elif a == c-1:
-            return 2 
-        else:
-            return 3
+    def calculateDistance(self, head, food):
+        (a,b) = head
+        (c,d) = food
+        return math.sqrt((a-c)^2 + (b-d)^2)
