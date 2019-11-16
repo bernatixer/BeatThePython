@@ -55,7 +55,11 @@ class Game:
 
     def createFood(self):
         if len(self.FOOD) == 0:
-            self.FOOD.append((random.randint(1,(WIDTH//TILE_SIZE) -1),random.randint(1,(HEIGHT//TILE_SIZE) -1)))
+            newPos = self.Player1.POSITIONS[0]
+            while newPos in self.Player1.POSITIONS:
+                newPos = (random.randint(1,(WIDTH//TILE_SIZE) -1),random.randint(1,(HEIGHT//TILE_SIZE) -1))
+            
+            self.FOOD.append(newPos)
 
     def getScore(self):
         return self.Player1.SCORE
