@@ -5,6 +5,7 @@ from snake import Snake
 import random
 import sys
 import train
+import json
 
 class Game:
     def __init__(self):
@@ -34,6 +35,15 @@ class Game:
                     self.Player1.moveSnake()
                 if event.type == USEREVENT + 2:
                     self.createFood()
+                if event.type == USEREVENT + 3:
+                    with open('storage.json', 'w') as fp:
+                        json.dump(train.storage, fp)
+
+                    with open('Q.json', 'w') as fp:
+                        json.dump(train.Q, fp)
+                        
+                    # with open('storage.json', 'r') as fp:
+                    #     data = json.load(fp)
 
             self.Player1.update(self.FOOD)
             if not self.FOOD:

@@ -2,12 +2,6 @@ from settings import *
 import numpy as np
 import game
 
-# import json
-# with open('storage.json', 'w') as fp:
-#     json.dump(storage, fp)
-
-# with open('storage.json', 'r') as fp:
-#     data = json.load(fp)
 
 storage = {}
 Q = np.zeros([50000, 4])
