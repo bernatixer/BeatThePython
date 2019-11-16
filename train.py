@@ -31,11 +31,18 @@ def action(s):
     return np.argmax(Q[convert(s), :])
 
 def afteraction(s, action):
-    return State(action, s.fooddirection)
+    head = s.head
+    if action == 2:
+        newHead = (head[0] - 1, head[1])
+    if action == 3:
+        newHead = (head[0] + 1, head[1])
+    if action == 0:
+        newHead = (head[0], head[1] - 1)
+    if action == 1:
+        newHead = (head[0], head[1] + 1)
+    return State(newHead, s.food)
 
 def chooseAction(player,food):
-    direction = player.getSnakeDirection()
-    fooddirection = player.getFoodDirection(food)
     s = State(player.POSITIONS[-1],food)
     act = action(s)
     r0 = player.calculateScore(food, act)

@@ -34,7 +34,6 @@ class Game:
                 if event.type == USEREVENT + 1:
                     action = train.chooseAction(self.Player1, self.FOOD)
                     self.Player1.act(action)
-                    print("Direction: ", self.Player1.getSnakeDirection(), " Food: ", self.Player1.getFoodDirection(self.FOOD))
                     self.Player1.moveSnake()
                 if event.type == USEREVENT + 2:
                     self.createFood()

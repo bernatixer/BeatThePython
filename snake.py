@@ -86,7 +86,7 @@ class Snake:
                 self.CURR_PresedKey = event.key
     
     def calculateScore(self, FOOD, action):
-        distA = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
+        distA = self.calculateDistance(self.POSITIONS[-1], FOOD[0], action = action)
         distB = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
 
         if distA < distB:
@@ -94,7 +94,19 @@ class Snake:
         else:
             return -1
 
-    def calculateDistance(self, head, food):
-        (a,b) = head
+    def calculateDistance(self, head, food, action = None):
+        if not action:
+            (a,b) = head
+        else:
+            if action == 2:
+                (a,b) = (self.POSITIONS[-1][0] - 1, self.POSITIONS[-1][1])
+            if action == 3:
+                (a,b) = (self.POSITIONS[-1][0] + 1, self.POSITIONS[-1][1])
+            if action == 0:
+                (a,b) = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] - 1)
+            if action == 1:
+                (a,b) = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] + 1)
+
         (c,d) = food
         return math.sqrt((a-c)^2 + (b-d)^2)
+            
