@@ -59,7 +59,7 @@ class Snake:
             newPos = (self.POSITIONS[-1][0], self.POSITIONS[-1][1] + 1)
 
         if newPos:
-            if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE or newPos in self.POSITIONS:
+            if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE:
                 print("Final Score:", self.SCORE)
                 self.gameOver = True
                 self.GAME_OVER()
@@ -91,7 +91,7 @@ class Snake:
 
         print("Distancia: ", distA, " Distancia: ",distB)
         if distA == "over":
-            return -10
+            return -100
         if distA == "eat":
             return 5
 

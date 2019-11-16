@@ -16,8 +16,8 @@ class Game:
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
-        pg.time.set_timer(USEREVENT + 1, 10) # move snake
-        pg.time.set_timer(USEREVENT + 2, 1500) # Create Food
+        pg.time.set_timer(USEREVENT + 1, 1) # move snake
+        pg.time.set_timer(USEREVENT + 2, 15) # Create Food
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
         self.createFood()
