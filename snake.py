@@ -24,7 +24,6 @@ class Snake:
         pg.draw.rect(self.DISPLAY,self.color,(x,y,TILE_SIZE,TILE_SIZE))
 
     def act(self, action):
-        print("Action:", action)
         if action == 0:
             self.moveUp()
         elif action == 1:
@@ -86,7 +85,7 @@ class Snake:
         distA = self.calculateDistance(self.POSITIONS[-1], FOOD[0], action = action)
         distB = self.calculateDistance(self.POSITIONS[-1], FOOD[0])
 
-        print("Distancia: ", distA, " Distancia: ",distB)
+        print("Dist:", distA, distB)
         if distA == "over":
             return -100
         if distA == "eat":

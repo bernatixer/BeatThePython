@@ -3,9 +3,7 @@ import numpy as np
 import game
 import json
 
-train = False
-
-if not train:
+if not game.train_:
     with open('storage.json', 'r') as fp:
         storage = json.load(fp)
 

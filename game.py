@@ -9,8 +9,15 @@ import numpy as np
 import json
 from tempfile import TemporaryFile
 
-generation = 0
-max_score = 0
+train_ = False
+if not train_:
+    with open('stats.json', 'r') as fp:
+        stats = json.load(fp)
+        generation = stats["generation"]
+        max_score = stats["max_score"]
+else:
+    generation = 0
+    max_score = 0
 
 class Game:
     def __init__(self):
@@ -21,11 +28,12 @@ class Game:
 
         pg.time.set_timer(USEREVENT + 1, 1) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
-        pg.time.set_timer(USEREVENT + 3, 60000) # Save weigths
+        pg.time.set_timer(USEREVENT + 3, 20000) # Save weigths
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
         self.createFood()
 
+        global max_score, generation
         while True:
             self.DISPLAY.fill(COLORS['black'])
             for event in pg.event.get():
@@ -41,9 +49,11 @@ class Game:
                 if event.type == USEREVENT + 2:
                     self.createFood()
                 if event.type == USEREVENT + 3:
-                    if not train.train:
+                    if not train_:
                         with open('storage.json', 'w') as fp:
                             json.dump(train.storage, fp)
+                        with open('stats.json', 'w') as fp:
+                            json.dump({'max_score': max_score, 'generation': generation}, fp)
                         np.savetxt("Q.txt", train.Q)
 
             self.Player1.update(self.FOOD)
@@ -53,11 +63,11 @@ class Game:
             for pos in self.FOOD:
                 self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
-            if not train.train:
+            if not train_:
                 score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
                 self.DISPLAY.blit(score, (10, 5))
 
-                global max_score, generation
+                # global max_score, generation
                 maxScore = self.FONT.render('Max score: ' + str(max_score), True, COLORS["text"])
                 self.DISPLAY.blit(maxScore, (10, 30))
 
@@ -90,5 +100,4 @@ class Game:
 
 
 if __name__== "__main__":
-    global GAME
     GAME = Game()
