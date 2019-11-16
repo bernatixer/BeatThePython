@@ -1,10 +1,18 @@
 from settings import *
 import numpy as np
 import game
+import json
 
+train = False
 
-storage = {}
-Q = np.zeros([50000, 4])
+if not train:
+    with open('storage.json', 'r') as fp:
+        storage = json.load(fp)
+
+    Q = np.loadtxt("Q.txt", dtype=float)
+else:
+    storage = {}
+    Q = np.zeros([50000, 4])
 
 class State:
     def __init__(self,head,food):

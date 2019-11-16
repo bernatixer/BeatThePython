@@ -14,7 +14,6 @@ class Snake:
         self.left = left
         self.color = color
         self.CURR_PresedKey = self.down
-        self.gameOver = False
         self.POSITIONS = [(4,0),(4,1),(4,2),(4,3),(4,4),(4,5)]
         self.SCORE = 0
         self.DISPLAY = display
@@ -61,19 +60,17 @@ class Snake:
         if newPos:
             if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE:
                 print("Final Score:", self.SCORE)
-                self.gameOver = True
                 self.GAME_OVER()
             if len(self.POSITIONS) > self.SCORE + 5:
                 del self.POSITIONS[0]            
             self.POSITIONS.append(newPos)
 
     def update(self, FOOD):
-        if not self.gameOver:
-            for pos in self.POSITIONS:
-                self.drawSnake(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
-            if self.POSITIONS[-1] in FOOD:
-                del FOOD[FOOD.index(self.POSITIONS[-1])]
-                self.SCORE += 1
+        for pos in self.POSITIONS:
+            self.drawSnake(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
+        if self.POSITIONS[-1] in FOOD:
+            del FOOD[FOOD.index(self.POSITIONS[-1])]
+            self.SCORE += 1
     
     def newEvent(self,event):
         if event.key in self.ALLOWED_KEYS:

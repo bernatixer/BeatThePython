@@ -5,7 +5,12 @@ from snake import Snake
 import random
 import sys
 import train
+import numpy as np
 import json
+from tempfile import TemporaryFile
+
+generation = 0
+max_score = 0
 
 class Game:
     def __init__(self):
@@ -16,7 +21,7 @@ class Game:
 
         pg.time.set_timer(USEREVENT + 1, 1) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
-        pg.time.set_timer(USEREVENT + 3, 100000) # Save weigths
+        pg.time.set_timer(USEREVENT + 3, 60000) # Save weigths
 
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
         self.createFood()
@@ -36,14 +41,10 @@ class Game:
                 if event.type == USEREVENT + 2:
                     self.createFood()
                 if event.type == USEREVENT + 3:
-                    with open('storage.json', 'w') as fp:
-                        json.dump(train.storage, fp)
-
-                    with open('Q.json', 'w') as fp:
-                        json.dump(train.Q, fp)
-                        
-                    # with open('storage.json', 'r') as fp:
-                    #     data = json.load(fp)
+                    if not train.train:
+                        with open('storage.json', 'w') as fp:
+                            json.dump(train.storage, fp)
+                        np.savetxt("Q.txt", train.Q)
 
             self.Player1.update(self.FOOD)
             if not self.FOOD:
@@ -52,8 +53,16 @@ class Game:
             for pos in self.FOOD:
                 self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
-            score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
-            self.DISPLAY.blit(score, (10, 5))  # render score
+            if not train.train:
+                score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
+                self.DISPLAY.blit(score, (10, 5))
+
+                global max_score, generation
+                maxScore = self.FONT.render('Max score: ' + str(max_score), True, COLORS["text"])
+                self.DISPLAY.blit(maxScore, (10, 30))
+
+                epoch = self.FONT.render('Generation: ' + str(generation), True, COLORS["text"])
+                self.DISPLAY.blit(epoch, (10, 55))
 
             pg.display.update()
 
@@ -72,6 +81,11 @@ class Game:
         return self.Player1.SCORE
 
     def game_over(self):
+        global max_score
+        if self.Player1.SCORE > max_score:
+            max_score = self.Player1.SCORE
+        global generation
+        generation += 1
         self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
 
 
