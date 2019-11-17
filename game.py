@@ -34,6 +34,8 @@ class Game:
         self.swiss2rect = self.swiss2.get_rect()
 
         pg.init()
+        pg.mixer.music.load('background.mp3')
+        pg.mixer.music.play(-1)
         self.FOOD = []
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
@@ -54,7 +56,7 @@ class Game:
 
             pg.display.update()
 
-        pg.time.set_timer(USEREVENT + 1, 150) # move snake
+        pg.time.set_timer(USEREVENT + 1, 100) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
         pg.time.set_timer(USEREVENT + 3, 20000) # Save weigths
 
