@@ -28,19 +28,24 @@ class Game:
 
         self.money = pg.image.load("images/money.png")
         self.swiss = pg.image.load("images/swiss.png")
+        self.swiss2 = pg.image.load("images/swiss2.png")
         self.moneyrect = self.money.get_rect()
         self.swissrect = self.swiss.get_rect()
+        self.swiss2rect = self.swiss2.get_rect()
 
         pg.init()
         self.FOOD = []
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
-        pg.time.set_timer(USEREVENT + 1, 1) # move snake
+        pg.time.set_timer(USEREVENT + 1, 150) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
         pg.time.set_timer(USEREVENT + 3, 20000) # Save weigths
 
-        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
+        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.go)
+
+        self.Player2 = Snake(color = COLORS["snake"], up = pg.K_w, down = pg.K_s, right = pg.K_d, left = K_a, display = self.DISPLAY, game_over = self.go)
+
         self.createFood()
 
         global max_score, generation
@@ -52,8 +57,14 @@ class Game:
                     sys.exit()
                 if event.type == pg.KEYDOWN:
                     self.Player1.newEvent(event)
+
+                    self.Player2.newEvent(event)
                 if event.type == USEREVENT + 1:
-                    pass
+                    action = train.chooseAction(self.Player1, self.FOOD)
+                    self.Player1.act(action)
+                    self.Player1.moveSnake()
+
+                    self.Player2.moveSnake()
                 if event.type == USEREVENT + 2:
                     self.createFood()
                 if event.type == USEREVENT + 3:
@@ -64,11 +75,12 @@ class Game:
                             json.dump({'max_score': max_score, 'generation': generation}, fp)
                         np.savetxt("Q.txt", train.Q)
 
-            action = train.chooseAction(self.Player1, self.FOOD)
-            self.Player1.act(action)
-            self.Player1.moveSnake()
+           
 
             self.Player1.update(self.FOOD, self.DISPLAY, self.swiss, self.swissrect)
+            
+            self.Player2.update(self.FOOD, self.DISPLAY, self.swiss2, self.swiss2rect)
+
             if not self.FOOD:
                 self.createFood()
 
@@ -98,13 +110,16 @@ class Game:
     def createFood(self):
         if len(self.FOOD) == 0:
             newPos = self.Player1.POSITIONS[0]
-            while newPos in self.Player1.POSITIONS:
+            while newPos in self.Player1.POSITIONS or newPos in self.Player2.POSITIONS:
                 newPos = (random.randint(1,(WIDTH//TILE_SIZE) -1),random.randint(1,(HEIGHT//TILE_SIZE) -1))
             
             self.FOOD.append(newPos)
 
     def getScore(self):
         return self.Player1.SCORE
+
+    def go(self):
+        print("YOLO")
 
     def game_over(self):
         global max_score

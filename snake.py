@@ -14,7 +14,7 @@ class Snake:
         self.left = left
         self.color = color
         self.CURR_PresedKey = self.down
-        self.POSITIONS = [(4,0),(4,1),(4,2),(4,3),(4,4),(4,5)]
+        self.POSITIONS = [(5,0),(5,1),(5,2),(5,3),(5,4),(5,5)]
         self.SCORE = 0
         self.DISPLAY = display
         self.ALLOWED_KEYS = [up,down,left,right]
