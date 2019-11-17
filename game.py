@@ -11,7 +11,7 @@ from tempfile import TemporaryFile
 import pygame_textinput
 import requests
 
-API_ENDPOINT = "http://localhost"
+API_ENDPOINT = "http://127.0.0.1:5000/ranking/"
 bg = pg.image.load("background.png")
 textinput = pygame_textinput.TextInput()
 train_ = False
@@ -154,6 +154,7 @@ class Game:
         score_txt = self.Player2.SCORE
         self.restart_bool = False
 
+        names = self.getRanking()
         while not self.restart_bool:
             events = pg.event.get()
             for event in events:
@@ -175,7 +176,8 @@ class Game:
 
             self.DISPLAY.blit(textinput.get_surface(), (25, 100))
             if textinput.update(events):
-                self.enterRanking(textinput.get_text(), score)
+                self.enterRanking(textinput.get_text(), score_txt)
+                names = self.getRanking()
 
             lines = self.FONT.render("-----------------------------------", True, COLORS["black"])
             self.DISPLAY.blit(lines, (25, 120))
@@ -183,25 +185,29 @@ class Game:
             lines = self.FONT.render("RANKING", True, COLORS["white"])
             self.DISPLAY.blit(lines, (WIDTH/2-85, 200))
 
-            names = self.getRanking()
+            
             for i in range(0,len(names)):
-                lines = self.FONT.render(str(i+1) + ". " + names[i], True, COLORS["white"])
+                lines = self.FONT.render(str(i+1) + ". " + names[i][0] + " - " + str(names[i][1]), True, COLORS["white"])
                 self.DISPLAY.blit(lines, (WIDTH/2-85, 230+25*i))
             
             pg.display.update()
 
     def getRanking(self):
         r = requests.get(url=API_ENDPOINT)
-        names = r.text
-        return ["bernatixer", "dasix", "lacasa"]
+        names = r.json()
+        if not names:
+            return ["bernatixer", "dasix", "lacasa"]
+        else:
+            print(names["ranking"])
+            usernames = [(user["username"], user["score"]) for user in names["ranking"]]
+            return usernames
 
     def enterRanking(self, name, score):
         data = {
-            'name': name,
+            'username': name,
             'score': score
         }
         r = requests.post(url=API_ENDPOINT, data=data)
-        print(r)
 
     def restart(self):
         global max_score
