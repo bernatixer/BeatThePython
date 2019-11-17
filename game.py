@@ -44,6 +44,7 @@ class Game:
         self.FOOD = []
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
+        self.TITLE = pg.font.Font("fonts/lineto-brown-regular.ttf", 35)
 
         self.start = False
         while not self.start:
@@ -55,9 +56,14 @@ class Game:
                     if event.key == pg.K_SPACE:
                         self.start = True
 
-            self.DISPLAY.fill(COLORS['black'])
-            start = self.FONT.render('Press SPACE to Start', True, COLORS["swiss"])
-            self.DISPLAY.blit(start, (WIDTH/2 - 125, HEIGHT/2))
+
+            self.DISPLAY.fill(COLORS['swiss'])
+            
+            title = self.TITLE.render('BeatThePython', True, COLORS["black"])
+            self.DISPLAY.blit(title, (110, HEIGHT/2 - 70))
+
+            start = self.FONT.render('Press SPACE to Start', True, COLORS["white"])
+            self.DISPLAY.blit(start, (WIDTH/2 - 125, HEIGHT/2 + 50))
 
             pg.display.update()
 
@@ -175,12 +181,12 @@ class Game:
             self.DISPLAY.blit(lines, (25, 120))
 
             lines = self.FONT.render("RANKING", True, COLORS["white"])
-            self.DISPLAY.blit(lines, (WIDTH/2-85, 170))
+            self.DISPLAY.blit(lines, (WIDTH/2-85, 200))
 
             names = self.getRanking()
             for i in range(0,len(names)):
                 lines = self.FONT.render(str(i+1) + ". " + names[i], True, COLORS["white"])
-                self.DISPLAY.blit(lines, (WIDTH/2-85, 200+25*i))
+                self.DISPLAY.blit(lines, (WIDTH/2-85, 230+25*i))
             
             pg.display.update()
 
