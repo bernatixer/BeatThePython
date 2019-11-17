@@ -164,6 +164,7 @@ class Game:
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_SPACE:
                         self.restart_bool = True
+                        exit()
                         self.restart()
 
             self.DISPLAY.fill(COLORS['swiss'])
@@ -184,7 +185,6 @@ class Game:
 
             lines = self.FONT.render("RANKING", True, COLORS["white"])
             self.DISPLAY.blit(lines, (WIDTH/2-85, 200))
-
             
             for i in range(0,len(names)):
                 lines = self.FONT.render(str(i+1) + ". " + names[i][0] + " - " + str(names[i][1]), True, COLORS["white"])
