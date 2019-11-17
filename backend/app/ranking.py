@@ -34,7 +34,7 @@ def ranking():
             db.commit()
             current_app.logger.info(f"Updated {username}'s score!")
             # return redirect(url_for("ranking.ranking"))
-            return dict(ranking=db.execute("SELECT * FROM ranking").fetchall())
+            return dict(ranking=db.execute("SELECT * FROM ranking ORDER BY SCORE DESC").fetchall())
         else:
             db.execute(
                 "INSERT INTO ranking (username, score) VALUES (?, ?)", (username, score)
@@ -42,6 +42,6 @@ def ranking():
             db.commit()
             current_app.logger.info(f"Inserted {username} into ranking!")
             # return redirect(url_for("ranking.ranking"))
-            return dict(ranking=db.execute("SELECT * FROM ranking").fetchall())
+            return dict(ranking=db.execute("SELECT * FROM ranking ORDER BY SCORE DESC").fetchall())
 
-    return dict(ranking=db.execute("SELECT * FROM ranking").fetchall())
+    return dict(ranking=db.execute("SELECT * FROM ranking ORDER BY SCORE DESC").fetchall())

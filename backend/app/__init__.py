@@ -6,18 +6,11 @@ from . import db
 from . import ranking
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-if not SECRET_KEY:
-    raise ValueError("No SECRET_KEY set for Flask application")
-
-
 def create_app(test_config=None):
     # create and configure app
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_mapping(
-        SECRET_KEY=SECRET_KEY,
         DATABASE=os.path.join(app.instance_path, "app.sqlite"),
     )
 
