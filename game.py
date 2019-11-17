@@ -171,16 +171,16 @@ class Game:
             if textinput.update(events):
                 self.enterRanking(textinput.get_text(), score)
 
-            lines = self.FONT.render("-------------------", True, COLORS["black"])
+            lines = self.FONT.render("-----------------------------------", True, COLORS["black"])
             self.DISPLAY.blit(lines, (25, 120))
 
             lines = self.FONT.render("RANKING", True, COLORS["white"])
-            self.DISPLAY.blit(lines, (WIDTH/2-30, 160))
+            self.DISPLAY.blit(lines, (WIDTH/2-85, 170))
 
             names = ["bernatixer", "dasix", "lacasa"]
             for i in range(0,len(names)):
-                lines = self.FONT.render(" -> " + names[i], True, COLORS["white"])
-                self.DISPLAY.blit(lines, (WIDTH/2-30, 180+25*i))
+                lines = self.FONT.render(str(i+1) + ". " + names[i], True, COLORS["white"])
+                self.DISPLAY.blit(lines, (WIDTH/2-85, 200+25*i))
             
             pg.display.update()
 
