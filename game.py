@@ -177,12 +177,17 @@ class Game:
             lines = self.FONT.render("RANKING", True, COLORS["white"])
             self.DISPLAY.blit(lines, (WIDTH/2-30, 160))
 
-            names = ["bernatixer", "dasix", "lacasa"]
+            names = self.getRanking()
             for i in range(0,len(names)):
                 lines = self.FONT.render(" -> " + names[i], True, COLORS["white"])
                 self.DISPLAY.blit(lines, (WIDTH/2-30, 180+25*i))
             
             pg.display.update()
+
+    def getRanking(self):
+        r = requests.get(url=API_ENDPOINT)
+        names = r.text
+        return ["bernatixer", "dasix", "lacasa"]
 
     def enterRanking(self, name, score):
         data = {
