@@ -1,0 +1,13 @@
+---
+version: "3.7"
+services:
+  api:
+    container_name: beat_the_python
+    image: beat_the_python
+    build: .
+    ports:
+      - "80:8000"
+    volumes:
+      - ./:/app/
+    env_file:
+      - .env
