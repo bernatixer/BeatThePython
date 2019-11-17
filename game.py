@@ -53,9 +53,7 @@ class Game:
                 if event.type == pg.KEYDOWN:
                     self.Player1.newEvent(event)
                 if event.type == USEREVENT + 1:
-                    action = train.chooseAction(self.Player1, self.FOOD)
-                    self.Player1.act(action)
-                    self.Player1.moveSnake()
+                    pass
                 if event.type == USEREVENT + 2:
                     self.createFood()
                 if event.type == USEREVENT + 3:
@@ -65,6 +63,10 @@ class Game:
                         with open('stats.json', 'w') as fp:
                             json.dump({'max_score': max_score, 'generation': generation}, fp)
                         np.savetxt("Q.txt", train.Q)
+
+            action = train.chooseAction(self.Player1, self.FOOD)
+            self.Player1.act(action)
+            self.Player1.moveSnake()
 
             self.Player1.update(self.FOOD, self.DISPLAY, self.swiss, self.swissrect)
             if not self.FOOD:
