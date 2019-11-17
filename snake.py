@@ -59,7 +59,8 @@ class Snake:
         if newPos:
             if newPos[0] < 0 or newPos[1] < 0 or newPos[0] >= WIDTH // TILE_SIZE or newPos[1] >= HEIGHT // TILE_SIZE:
                 print("Final Score:", self.SCORE)
-                self.GAME_OVER()
+                if self.GAME_OVER:
+                    self.GAME_OVER()
             if len(self.POSITIONS) > self.SCORE + 5:
                 del self.POSITIONS[0]            
             self.POSITIONS.append(newPos)

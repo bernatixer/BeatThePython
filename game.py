@@ -38,11 +38,27 @@ class Game:
         self.DISPLAY = pg.display.set_mode(SIZE)
         self.FONT = pg.font.Font("fonts/RobotoMono-Medium.ttf", 20)
 
+        self.start = False
+        while not self.start:
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE:
+                        self.start = True
+
+            self.DISPLAY.fill(COLORS['black'])
+            start = self.FONT.render('Press SPACE to Start', True, COLORS["swiss"])
+            self.DISPLAY.blit(start, (WIDTH/2 - 125, HEIGHT/2))
+
+            pg.display.update()
+
         pg.time.set_timer(USEREVENT + 1, 150) # move snake
         pg.time.set_timer(USEREVENT + 2, 15) # Create Food
         pg.time.set_timer(USEREVENT + 3, 20000) # Save weigths
 
-        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.go)
+        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = None)
 
         self.Player2 = Snake(color = COLORS["snake"], up = pg.K_w, down = pg.K_s, right = pg.K_d, left = K_a, display = self.DISPLAY, game_over = self.go)
 
@@ -50,6 +66,7 @@ class Game:
 
         global max_score, generation
         while True:
+            
             self.DISPLAY.fill(COLORS['black'])
             for event in pg.event.get():
                 if event.type == QUIT:
@@ -91,8 +108,11 @@ class Game:
                 #self.drawFood(pos[0] * TILE_SIZE, pos[1] * TILE_SIZE)
 
             if not train_:
-                score = self.FONT.render('Score: ' + str(self.Player1.SCORE), True, COLORS["text"])
+                score = self.FONT.render('Score AI: ' + str(self.Player1.SCORE), True, COLORS["white"])
                 self.DISPLAY.blit(score, (10, 5))
+
+                score2 = self.FONT.render('Score 2: ' + str(self.Player2.SCORE), True, COLORS["white"])
+                self.DISPLAY.blit(score2, (WIDTH - 150, 5))
 
                 # global max_score, generation
                 maxScore = self.FONT.render('Max score: ' + str(max_score), True, COLORS["text"])
@@ -119,15 +139,40 @@ class Game:
         return self.Player1.SCORE
 
     def go(self):
-        print("YOLO")
+        AI_score_txt = self.Player1.SCORE
+        score_txt = self.Player2.SCORE
+        self.restart_bool = False
 
-    def game_over(self):
+        while not self.restart_bool:
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE:
+                        self.restart_bool = True
+                        self.restart()
+
+            self.DISPLAY.fill(COLORS['black'])
+            AI_score = self.FONT.render('Score of the AI: ' + str(AI_score_txt), True, COLORS["swiss"])
+            score = self.FONT.render('Your score: ' + str(score_txt), True, COLORS["swiss"])
+            start = self.FONT.render('Press SPACE to ReStart', True, COLORS["swiss"])
+            self.DISPLAY.blit(start, (WIDTH/2 - 125, HEIGHT/2))
+            self.DISPLAY.blit(AI_score, (WIDTH/2 - 100, HEIGHT/2 - 35))
+            self.DISPLAY.blit(score, (WIDTH/2 - 75, HEIGHT/2 - 70))
+
+            pg.display.update()
+
+    def restart(self):
         global max_score
         if self.Player1.SCORE > max_score:
             max_score = self.Player1.SCORE
         global generation
         generation += 1
-        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = self.game_over)
+
+        self.Player1 = Snake(color = COLORS["white"], up = pg.K_UP, down = pg.K_DOWN, right = pg.K_RIGHT, left = K_LEFT, display = self.DISPLAY, game_over = None)
+
+        self.Player2 = Snake(color = COLORS["snake"], up = pg.K_w, down = pg.K_s, right = pg.K_d, left = K_a, display = self.DISPLAY, game_over = self.go)
 
 
 if __name__== "__main__":
