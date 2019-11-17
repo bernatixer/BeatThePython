@@ -8,7 +8,12 @@ import train
 import numpy as np
 import json
 from tempfile import TemporaryFile
+import pygame_textinput
+import requests
 
+API_ENDPOINT = "http://localhost"
+bg = pg.image.load("background.png")
+textinput = pygame_textinput.TextInput()
 train_ = False
 if not train_:
     with open('stats.json', 'r') as fp:
@@ -68,8 +73,9 @@ class Game:
 
         global max_score, generation
         while True:
-            
-            self.DISPLAY.fill(COLORS['black'])
+            self.DISPLAY.blit(bg, (0, 0))
+
+            # self.DISPLAY.fill(COLORS['black'])
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -94,8 +100,6 @@ class Game:
                             json.dump({'max_score': max_score, 'generation': generation}, fp)
                         np.savetxt("Q.txt", train.Q)
 
-           
-
             self.Player1.update(self.FOOD, self.DISPLAY, self.swiss, self.swissrect)
             
             self.Player2.update(self.FOOD, self.DISPLAY, self.swiss2, self.swiss2rect)
@@ -117,13 +121,12 @@ class Game:
                 self.DISPLAY.blit(score2, (WIDTH - 150, 5))
 
                 # global max_score, generation
-                maxScore = self.FONT.render('Max score: ' + str(max_score), True, COLORS["text"])
-                self.DISPLAY.blit(maxScore, (10, 30))
+                # maxScore = self.FONT.render('Max score: ' + str(max_score), True, COLORS["text"])
+                # self.DISPLAY.blit(maxScore, (10, 30))
 
-                epoch = self.FONT.render('Generation: ' + str(generation), True, COLORS["text"])
-                self.DISPLAY.blit(epoch, (10, 55))
+                # epoch = self.FONT.render('Generation: ' + str(generation), True, COLORS["text"])
+                # self.DISPLAY.blit(epoch, (10, 55))
 
-            
             pg.display.update()
 
     def drawFood(self, x,y):
@@ -146,7 +149,8 @@ class Game:
         self.restart_bool = False
 
         while not self.restart_bool:
-            for event in pg.event.get():
+            events = pg.event.get()
+            for event in events:
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
@@ -155,15 +159,38 @@ class Game:
                         self.restart_bool = True
                         self.restart()
 
-            self.DISPLAY.fill(COLORS['black'])
-            AI_score = self.FONT.render('Score of the AI: ' + str(AI_score_txt), True, COLORS["swiss"])
-            score = self.FONT.render('Your score: ' + str(score_txt), True, COLORS["swiss"])
-            start = self.FONT.render('Press SPACE to ReStart', True, COLORS["swiss"])
-            self.DISPLAY.blit(start, (WIDTH/2 - 125, HEIGHT/2))
-            self.DISPLAY.blit(AI_score, (WIDTH/2 - 100, HEIGHT/2 - 35))
-            self.DISPLAY.blit(score, (WIDTH/2 - 75, HEIGHT/2 - 70))
+            self.DISPLAY.fill(COLORS['swiss'])
+            AI_score = self.FONT.render('Score of the AI: ' + str(AI_score_txt), True, COLORS["black"])
+            score = self.FONT.render('Your score: ' + str(score_txt), True, COLORS["black"])
+            start = self.FONT.render('Enter your username and hit RETURN', True, COLORS["black"])
+            self.DISPLAY.blit(score, (WIDTH/2 - 75, 5))
+            self.DISPLAY.blit(AI_score, (WIDTH/2 - 100, 30))
+            self.DISPLAY.blit(start, (WIDTH/2 - 200, 60))
 
+            self.DISPLAY.blit(textinput.get_surface(), (25, 100))
+            if textinput.update(events):
+                self.enterRanking(textinput.get_text(), score)
+
+            lines = self.FONT.render("-------------------", True, COLORS["black"])
+            self.DISPLAY.blit(lines, (25, 120))
+
+            lines = self.FONT.render("RANKING", True, COLORS["white"])
+            self.DISPLAY.blit(lines, (WIDTH/2-30, 160))
+
+            names = ["bernatixer", "dasix", "lacasa"]
+            for i in range(0,len(names)):
+                lines = self.FONT.render(" -> " + names[i], True, COLORS["white"])
+                self.DISPLAY.blit(lines, (WIDTH/2-30, 180+25*i))
+            
             pg.display.update()
+
+    def enterRanking(self, name, score):
+        data = {
+            'name': name,
+            'score': score
+        }
+        r = requests.post(url=API_ENDPOINT, data=data)
+        print(r)
 
     def restart(self):
         global max_score
